@@ -1,14 +1,14 @@
 #include <iostream>
-#include<bits/stdc++.h>
 #include <list>
+#include <algorithm>
 
 using namespace std;
 
 class Set {
 private:
-    list<int> elements;
 
 public:
+    list<int> elements;
     // Add element to the set
     void Add(int element) {
         // Check for duplicates before adding
@@ -34,7 +34,7 @@ public:
     }
 
     // Print the elements of the set
-    void Print() {
+    void Print() const {
         if (elements.empty()) {
             cout << "Empty set" << endl;
             return;
@@ -52,14 +52,14 @@ public:
 
         // Add all unique elements from set1
         for (int element : set1) {
-            if (!exists(result.begin(), result.end(), element)) {
+            if (find(result.begin(), result.end(), element) == result.end()) {
                 result.push_back(element);
             }
         }
 
         // Add all unique elements from set2
         for (int element : set2) {
-            if (!exists(result.begin(), result.end(), element)) {
+            if (find(result.begin(), result.end(), element) == result.end()) {
                 result.push_back(element);
             }
         }
@@ -71,7 +71,7 @@ public:
 
         // Find common elements in both sets
         for (int element : set1) {
-            if (exists(set2.begin(), set2.end(), element)) {
+            if (find(set2.begin(), set2.end(), element) != set2.end()) {
                 result.push_back(element);
             }
         }
@@ -83,21 +83,10 @@ public:
 
         // Find elements in set1 that are not in set2
         for (int element : set1) {
-            if (!exists(set2.begin(), set2.end(), element)) {
+            if (find(set2.begin(), set2.end(), element) == set2.end()) {
                 result.push_back(element);
             }
         }
-    }
-
-private:
-    // Helper function to check if an element exists in a list
-    static bool exists(const list<int>::iterator begin, const list<int>::iterator end, int element) {
-        for (auto it = begin; it != end; ++it) {
-            if (*it == element) {
-                return true;
-            }
-        }
-        return false;
     }
 };
 
@@ -113,11 +102,52 @@ int main() {
     setB.push_back(4);
 
     cout << "Set A: ";
-    setA.Print();
+    for (int elem : setA) {
+        cout << elem << " ";
+    }
+    cout << endl;
 
     cout << "Set B: ";
-    setB.Print();
+    for (int elem : setB) {
+        cout << elem << " ";
+    }
+    cout << endl;
 
-    cout << "Search for 4 in Set A: " << (Set::Search(setA, 4) ? "Found" : "Not Found") << endl;
+    // Union
+    list<int> unionResult;
+    Set::Union(setA, setB, unionResult);
+    cout << "Union of Set A and Set B: ";
+    for (int elem : unionResult) {
+        cout << elem << " ";
+    }
+    cout << endl;
+
+    // Intersection
+    list<int> intersectionResult;
+    Set::Intersection(setA, setB, intersectionResult);
+    cout << "Intersection of Set A and Set B: ";
+    for (int elem : intersectionResult) {
+        cout << elem << " ";
+    }
+    cout << endl;
+
+    // Difference A - B
+    list<int> differenceAB;
+    Set::Difference(setA, setB, differenceAB);
+    cout << "Difference of Set A - Set B: ";
+    for (int elem : differenceAB) {
+        cout << elem << " ";
+    }
+    cout << endl;
+
+    // Difference B - A
+    list<int> differenceBA;
+    Set::Difference(setB, setA, differenceBA);
+    cout << "Difference of Set B - Set A: ";
+    for (int elem : differenceBA) {
+        cout << elem << " ";
+    }
+    cout << endl;
+
     return 0;
 }
